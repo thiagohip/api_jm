@@ -15,26 +15,23 @@ class StackUserController extends Controller
             "stack_id" => $request->stack_id,
         ]);
         return response()->json([
-            "message" => "success",
             "user_stack" => $data,
         ]);
     }
 
-    function index($page){
+    function index(){
         $user = User::find(Auth()->user()->id);
         $data = StackUser::whereBelongsTo($user)->get();
-        if($page < count($data)){
-            $stacks = Stack::find($data[$page]["stack_id"]);
-            return $stacks;
+
+        $stacks = [];
+        foreach ($data as $key => $i) {
+            array_push($stacks, Stack::find($i["stack_id"]));
         }
+
         return response()->json([
-            "message" => "Invalid page",
+            "stacks" => $stacks
         ]);
+       
     }
 
-    function maxPage(){
-        $user = User::find(Auth()->user()->id);
-        $data = StackUser::whereBelongsTo($user)->get();
-        return count($data)-1;
-    }
 }

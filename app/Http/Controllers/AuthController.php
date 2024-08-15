@@ -22,11 +22,7 @@ class AuthController extends Controller
                 'name'=>$request->name,
                 'password'=>Hash::make($request->password),
             ]);
-    
-    
-            return response()->json([
-                "message" => "success",
-            ]);
+            return $user;
         }catch(ValidationException $e){
             return response()->json([
                 "message" => "error",
@@ -43,11 +39,19 @@ class AuthController extends Controller
     
             return response()->json([
                 "access_token" => $token,
-                "token_type" => "Bearer"
+                "user" => $user,
             ]);
         }
         return response()->json([
             "message" => "Invalid user",
+        ]);
+    }
+
+    function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout realizado com sucesso'
         ]);
     }
 }
