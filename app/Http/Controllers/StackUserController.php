@@ -28,9 +28,7 @@ class StackUserController extends Controller
             array_push($stacks, Stack::find($i["stack_id"]));
         }
 
-        return response()->json([
-            "stacks" => $stacks
-        ]);
+        return $stacks;
        
     }
 
