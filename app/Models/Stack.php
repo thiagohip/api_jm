@@ -11,10 +11,9 @@ class Stack extends Model
 
     protected $fillable = [
         'name',
-        'image_path',
     ];
 
-    public function userStacks() {
-        return $this->hasMany('App\Models\StackUser', 'stack_id');
+    public function user(){
+        return $this->belongsTo('App\Models\User');
     }
 }

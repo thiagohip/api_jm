@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stack_users', function (Blueprint $table) {
-            $table->bigIncrements("id");
-            $table->unsignedBigInteger("stack_id");
-            $table->unsignedBigInteger("user_id");
-            $table->foreign('stack_id')->references('id')->on('stacks');
+        Schema::create('stacks', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name');
+            $table->unsignedBigInteger('user_id');
+
             $table->foreign('user_id')->references('id')->on('users');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stack_user');
+        Schema::dropIfExists('stacks');
     }
 };

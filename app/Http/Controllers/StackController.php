@@ -3,25 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Stack;
+use App\Models\User;
 
 class StackController extends Controller
 {
-    function create(Request $request){
-        $stack = Stack::create([
-            "name"=>$request->name,
-            "image_path"=>$request->image_path,
-        ]);
-        return response()->json([
-            "message"=> "Stack created",
-            "stack" => $stack,
-        ]);
+    function store(Request $request){
+        $stack = new Stack();
+
+        $stack->name = $request->name;
+        $stack->user_id = Auth()->user()->id;
+
+        if($stack->save()){
+            return response()->json([
+                "message" => "Stack cadastrada com sucesso!",
+                "stack" => $stack,
+            ]);
+        }else{
+            return response()->json([
+                "message" => "Erro ao cadastrar a stack!"
+            ]);
+        }
     }
 
     function index(){
-        $stacks = Stack::all();
-        return response()->json([
-            "stacks" => $stacks
-        ]);
+        $user = User::find(Auth()->user()->id);
+        $stacks = Stack::whereBelongsTo($user)->get();
+
+        return $stacks;
     }
 }
